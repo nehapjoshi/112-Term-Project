@@ -13,8 +13,10 @@ def mousePressed(event, data):
     pass
 
 def keyPressed(event, data):
-    if event.keysym == "Return":
+    if event.keysym == "Right":
         data.slideNum += 1
+    elif event.keysym == "Left":
+        data.slideNum -= 1
 
 def timerFired(data):
     pass
@@ -31,6 +33,10 @@ def displaySlide(canvas, data):
         galaxyCategoriesSlide(canvas, data)
     elif data.slideNum == 2:
         specialCharacteristicsSlide(canvas, data)
+    elif data.slideNum == 3:
+        endLearning(canvas, data)
+    elif data.slideNum == 4:
+        gameDirections(canvas, data)
  
 #defines what is shown on title slide       
 def titleSlide(canvas, data):
@@ -50,6 +56,7 @@ def titleSlide(canvas, data):
     canvas.create_text(data.width//2, 3*data.height//4, text = directions,
         font = "Arial " + str(data.height//30))
 
+#text to be shown on slide teaching about types of galaxies
 def galaxyCategoriesSlide(canvas, data):
     heading = "THE THREE MAIN CATEGORIES OF GALAXIES"
     
@@ -83,6 +90,7 @@ def galaxyCategoriesSlide(canvas, data):
     canvas.create_text(data.width//5, 3*data.height//5, text = irregularInfo, 
         anchor = "nw", font = "Arial " + str(data.height//50))
     
+#text to be shown about special characteristics galaxies might have
 def specialCharacteristicsSlide(canvas, data):
     heading = "There are also other characteristics that a galaxy may have:"
     
@@ -115,6 +123,32 @@ def specialCharacteristicsSlide(canvas, data):
     
     canvas.create_text(data.width//5, 3*data.height//5, text = ringInfo, 
         anchor = "nw", font = "Arial " + str(data.height//50))
+
+#slide showing end of the learing module
+def endLearning(canvas, data):
+    text = "Now that you've learned about different types of galaxies \n give categorizing a try!"
+    text2 = "All galaxies presented are REAL, with real data!"
+    
+    canvas.create_text(data.width//2, data.height//3, text = text,
+        font = "Arial " + str(data.height//30))
+        
+    canvas.create_text(data.width//2, 2*data.height//3, text = text2,
+        font = "Arial " + str(data.height//30))
+        
+#slide displaying directions of how to play game, and brief demo
+def gameDirections(canvas, data):
+    text = "Given a galaxy:"
+    step1 = "1. Look at the image"
+    step2 = "2. Choose the option that fits the galaxy the best"
+    
+    canvas.create_text(data.width//2, data.margin, text = text, anchor = "n",
+        font = "Arial " + str(data.height//30) + " bold")
+    
+    canvas.create_text(data.margin, data.height//4, text = step1, anchor = "sw",
+        font = "Arial " + str(data.height//30))
+    
+    canvas.create_text(data.margin, data.height//4, text = step2, anchor = "nw",
+        font = "Arial " + str(data.height//30))
 
 def run(width=300, height=300):
     def redrawAllWrapper(canvas, data):
