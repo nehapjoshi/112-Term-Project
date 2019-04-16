@@ -35,42 +35,86 @@ def displaySlide(canvas, data):
 #defines what is shown on title slide       
 def titleSlide(canvas, data):
     title = "GALAXY SORTING"
+    
     #line too long:
     details = "Learn what makes a galaxy unique and become an astronomer too!"
+    
     directions = "Press ENTER to advance through each slide."
+    
     canvas.create_text(data.width//2, data.height//4, text = title, 
         font = "Arial " + str(data.height//10) + " bold")
+    
     canvas.create_text(data.width//2, 5*data.height//8, text = details,
         font = "Arial " + str(data.height//30))
+    
     canvas.create_text(data.width//2, 3*data.height//4, text = directions,
         font = "Arial " + str(data.height//30))
 
 def galaxyCategoriesSlide(canvas, data):
     heading = "THE THREE MAIN CATEGORIES OF GALAXIES"
+    
     spiral = "SPIRAL"
     spiralInfo = "Most spiral galaxies are disk-like, with arms that reach out from the center.  \n Spiral galaxies rotate around theire center, in the plane of the disk, \n giving them the characteristic and recognizable shape. \n They are also the most abundant category in the universe"
+    
     elliptical = "ELLIPTICAL"
     ellipticalInfo = "Characterized as a 'fuzzy ball' of stars and gas that form a relatively round shape. \n Elliptical galaxies are typically some of the oldest galaxies \n that have been rounded by gravity over time."
+    
     irregular = "IRREGULAR"
     irregularInfo = "Irregular galaxies are just that--irregular.  \n They don't quite fit the description of spiral or elliptical galaxies."
     
     canvas.create_text(data.width//2, data.margin, text = heading, anchor = "n",
         font = "Arial " + str(data.height//30) + " bold")
+    
     canvas.create_text(data.width//5, 1*data.height//5, text = spiral, anchor = 
         "sw", font = "Arial " + str(data.height//50) + " bold")
+    
     canvas.create_text(data.width//5, 1*data.height//5, text = spiralInfo,
         anchor = "nw", font = "Arial " + str(data.height//50))
+    
     canvas.create_text(data.width//5, 2*data.height//5, text = elliptical, 
         anchor = "sw", font = "Arial " + str(data.height//50) + " bold")
+    
     canvas.create_text(data.width//5, 2*data.height//5, text = ellipticalInfo, 
         anchor = "nw", font = "Arial " + str(data.height//50))
+    
     canvas.create_text(data.width//5, 3*data.height//5, text = irregular, 
         anchor = "sw", font = "Arial " + str(data.height//50) + " bold")
+    
     canvas.create_text(data.width//5, 3*data.height//5, text = irregularInfo, 
         anchor = "nw", font = "Arial " + str(data.height//50))
     
 def specialCharacteristicsSlide(canvas, data):
-    pass
+    heading = "There are also other characteristics that a galaxy may have:"
+    
+    bar = "BAR"
+    barInfo = "Some spiral galaxies have a bar that goes through the center, \n and the arms sprout out of it."
+    
+    bulge = "BULGE"
+    bulgeInfo = "Spiral galaxies can have a central bulge where the galaxy is \n thicker than toward the edges."
+    
+    ring = "RING"
+    ringInfo = "Some galaxies maight have a ring of matter surrounding them, \n similar to how a planet can have rings."
+    
+    canvas.create_text(data.width//2, data.margin, text = heading, anchor = "n",
+        font = "Arial " + str(data.height//30) + " bold")
+    
+    canvas.create_text(data.width//5, 1*data.height//5, text = bar, anchor = 
+        "sw", font = "Arial " + str(data.height//50) + " bold")
+    
+    canvas.create_text(data.width//5, 1*data.height//5, text = barInfo,
+        anchor = "nw", font = "Arial " + str(data.height//50))
+    
+    canvas.create_text(data.width//5, 2*data.height//5, text = bulge, 
+        anchor = "sw", font = "Arial " + str(data.height//50) + " bold")
+    
+    canvas.create_text(data.width//5, 2*data.height//5, text = bulgeInfo, 
+        anchor = "nw", font = "Arial " + str(data.height//50))
+    
+    canvas.create_text(data.width//5, 3*data.height//5, text = ring, 
+        anchor = "sw", font = "Arial " + str(data.height//50) + " bold")
+    
+    canvas.create_text(data.width//5, 3*data.height//5, text = ringInfo, 
+        anchor = "nw", font = "Arial " + str(data.height//50))
 
 def run(width=300, height=300):
     def redrawAllWrapper(canvas, data):
