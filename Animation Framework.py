@@ -1,6 +1,7 @@
 #Animation Starter Code from http://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
 
 from tkinter import *
+import image_gifs
 
 
 def init(data):
@@ -45,7 +46,8 @@ def titleSlide(canvas, data):
     #line too long:
     details = "Learn what makes a galaxy unique and become an astronomer too!"
     
-    directions = "Press ENTER to advance through each slide."
+    directions = "Press the right to advance through each slide."
+    
     
     canvas.create_text(data.width//2, data.height//4, text = title, 
         font = "Arial " + str(data.height//10) + " bold")
