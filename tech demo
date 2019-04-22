@@ -1,0 +1,42 @@
+#https://abhgog.gitbooks.io/webscraping/content/making-a-sample-app/downloading-the-source-of-a-website.html
+import requests
+
+#website of recent galaxy discoveries
+url = "https://science.nasa.gov/astrophysics/focus-areas/what-are-galaxies"
+
+website = requests.get(url)
+
+source = website.text
+
+#https://abhgog.gitbooks.io/webscraping/content/making-a-sample-app/scraping-the-source-for-information.html
+from bs4 import BeautifulSoup
+
+parser = BeautifulSoup(source,'html.parser')
+
+galaxy = False
+date = False
+
+galaxyDiscoveries = []
+
+
+def findGalaxies():
+    discoveries = dict()
+    date = ""
+    discovered = ""
+    for tableRow in parser.find_all("td"):
+        if "," in tableRow.text:
+            date = tableRow.text
+            print(date)
+        else:
+            discovered = tableRow.text
+        if date is not "" and galaxy is not "":
+            discoveries[date] = discovered
+            date = ""
+            discovered = ""
+    return discoveries
+        
+discoveries = findGalaxies()
+
+for discovery in discoveries:
+    print("%s was found on %s" % (discoveries[discovery], discovery))
+        
