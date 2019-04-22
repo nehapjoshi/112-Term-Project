@@ -1,0 +1,16 @@
+class Buttons(object):
+    
+    def __init__(self, text, x, y):
+        self.label = text
+        self.height = 20
+        self.width = 100
+        #defining upper left corner
+        self.x = x
+        self.y = y
+        
+    def draw(self):
+        canvas.create_rectangle(self.x, self.y, self.x + self.width,  
+            self.y + self.height, width = 5, fill = "PaleTurquiose1")
+        canvas.create_text(self.x + self.width/2, self.y + self.height/2,
+            text = self.label, font = "Times")
+        
