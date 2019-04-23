@@ -1,13 +1,14 @@
 #Animation Starter Code from http://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
 
 from tkinter import *
-import image_gifs
-
+import buttons
+import os
 
 def init(data):
     data.title = "Galaxy Sorting"
     data.slideNum = 0
     data.margin = data.height//50
+    loadGalaxyImages(data) #loads all necessary images
 
 def mousePressed(event, data):
     # use event.x and event.y
@@ -25,6 +26,11 @@ def timerFired(data):
 def redrawAll(canvas, data):
     displaySlide(canvas, data)
     
+def loadGalaxyImages(data):
+    path = os.getcwd()
+    pinwheelPath = 'image_gifs/pinwheel.gif'
+    data.pinwheel = PhotoImage(file = pinwheelPath)
+    
 #sets up what is going to show up on each slide
 def displaySlide(canvas, data):
     if data.slideNum == 0:
@@ -38,6 +44,8 @@ def displaySlide(canvas, data):
         endLearning(canvas, data)
     elif data.slideNum == 4:
         gameDirections(canvas, data)
+    elif data.slideNum >= 5:
+        gameSlide(canvas, data)
  
 #defines what is shown on title slide       
 def titleSlide(canvas, data):
@@ -59,6 +67,7 @@ def titleSlide(canvas, data):
         font = "Arial " + str(data.height//30))
 
 #text to be shown on slide teaching about types of galaxies
+##insert images
 def galaxyCategoriesSlide(canvas, data):
     heading = "THE THREE MAIN CATEGORIES OF GALAXIES"
     
@@ -80,6 +89,8 @@ def galaxyCategoriesSlide(canvas, data):
     canvas.create_text(data.width//5, 1*data.height//5, text = spiralInfo,
         anchor = "nw", font = "Arial " + str(data.height//50))
     
+    canvas.create_image(data.width//5, 1*data.height//5, image = data.pinwheel)
+    
     canvas.create_text(data.width//5, 2*data.height//5, text = elliptical, 
         anchor = "sw", font = "Arial " + str(data.height//50) + " bold")
     
@@ -93,6 +104,7 @@ def galaxyCategoriesSlide(canvas, data):
         anchor = "nw", font = "Arial " + str(data.height//50))
     
 #text to be shown about special characteristics galaxies might have
+##insert images
 def specialCharacteristicsSlide(canvas, data):
     heading = "There are also other characteristics that a galaxy may have:"
     
@@ -151,6 +163,13 @@ def gameDirections(canvas, data):
     
     canvas.create_text(data.margin, data.height//4, text = step2, anchor = "nw",
         font = "Arial " + str(data.height//30))
+
+def gameSlide(canvas, data):
+    pass
+    #get which galaxy to use
+    #get image and use
+    #use question and import buttons
+    #draw method for button to put in correct location
 
 def run(width=300, height=300):
     def redrawAllWrapper(canvas, data):
