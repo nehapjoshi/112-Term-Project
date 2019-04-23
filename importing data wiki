@@ -1,0 +1,41 @@
+import requests
+
+url = "https://en.wikipedia.org/wiki/List_of_spiral_galaxies"
+
+website = requests.get(url)
+
+source = website.text
+
+from bs4 import BeautifulSoup
+#identifies to parse through source info of website
+parser = BeautifulSoup(source,'html.parser')
+
+#dictionary of information for galaxies from table
+galaxies = dict()
+
+#parsing through text of table to find info in cells
+for table in parser.find("table", {"class":"wikitable sortable"}):
+    table = str(table)
+    heading = True
+    for body in table.split("<tr>"):
+        if not heading:
+            print("row:" + body + "\n")
+        heading = False
+        
+        # for column in parser.find_all("td"):
+        #     if col == 0:
+        #         key = column.text
+        #         for link in parser.find_all("a", href=True):
+        #             address = link['href']
+        #             print(address)
+        #         col +=1
+
+            #     values = []
+            # else:
+            #     column
+
+
+
+# for tableRow in parser.find_all("td"):
+#     for a in parser.find_all("a", href=True):
+#         print("Found the URL:", a['href'])
