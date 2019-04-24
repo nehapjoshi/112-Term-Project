@@ -2,15 +2,15 @@ class Buttons(object):
     
     def __init__(self, text, x, y):
         self.label = text
-        self.height = 20
-        self.width = 100
+        self.height = 100
+        self.width = 200
         #defining upper left corner
         self.x = x
         self.y = y
         
-    def draw(self):
+    def draw(self, canvas):
         canvas.create_rectangle(self.x, self.y, self.x + self.width,  
-            self.y + self.height, width = 5, fill = "PaleTurquiose1")
+            self.y + self.height, width = 5, fill = "turquoise")
         canvas.create_text(self.x + self.width/2, self.y + self.height/2,
-            text = self.label, font = "Times")
-        
+            text = self.label, font = "Times 24")
+
