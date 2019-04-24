@@ -9,22 +9,37 @@ def init(data):
     data.slideNum = 0
     data.margin = data.height//50
     loadGalaxyImages(data) #loads all necessary images
-    data.spiralButton = (2*data.width/3, data.height /4)
-    data.irregularButton = (2*data.width/3, data.height /2)
-    data.ellipticalButton = (2*data.width/3, 3*data.height /4)
-    data.bulgeButton = (2*data.width/3, data.height /4)
-    data.barButton = (2*data.width/3, data.height /2)
-    data.ringButton = (2*data.width/3, 3*data.height /4)
+    data.spiralButton = (2*data.width/3, data.height /4, "spiral")
+    data.irregularButton = (2*data.width/3, data.height /2, "irregular")
+    data.ellipticalButton = (2*data.width/3, 3*data.height /4, "elliptical")
+    data.bulgeButton = (2*data.width/3, data.height /4, "bulge")
+    data.barButton = (2*data.width/3, data.height /2, "bar")
+    data.ringButton = (2*data.width/3, 3*data.height /4, "ring")
+    data.buttonHeight = 100
+    data.buttonWidth = 200
+    data.buttons = []
+    data.answers = []
+    data.clicks = 0
 
 def mousePressed(event, data):
-    # use event.x and event.y
-    pass
+    data.clicks += 1
+    x = event.x
+    y = event.y
+    if data.slideNum >= 5 and data.clicks == 1:
+        for button in data.buttons:
+            if (button[0] <= event.x <= button[0] + 
+            data.buttonWidth) and (button[1] <= event.y <= 
+            button[1] + data.buttonHeight):
+                data.answers += button[2]
+                #print(button[2])
+        
 
 def keyPressed(event, data):
     if event.keysym == "Right":
         data.slideNum += 1
     elif event.keysym == "Left":
         data.slideNum -= 1
+    data.clicks = 0
 
 def timerFired(data):
     pass
@@ -191,23 +206,25 @@ def gameDirections(canvas, data):
         font = "Arial " + str(data.height//30))
 
 def gameSlide1(canvas, data):
-    spiralButton = buttons.Buttons("spiral", data.spiralButton[0], data.spiralButton[1])
-    irregularButton = buttons.Buttons("irregular", data.irregularButton[0], data.irregularButton[1])
-    ellipticalButton = buttons.Buttons("elliptical", data.ellipticalButton[0], data.ellipticalButton[1])
+    spiralButton = buttons.Buttons(data.spiralButton[2], data.spiralButton[0], data.spiralButton[1])
+    irregularButton = buttons.Buttons(data.irregularButton[2], data.irregularButton[0], data.irregularButton[1])
+    ellipticalButton = buttons.Buttons(data.ellipticalButton[2], data.ellipticalButton[0], data.ellipticalButton[1])
     buttons.Buttons.draw(spiralButton, canvas)
     buttons.Buttons.draw(irregularButton, canvas)
     buttons.Buttons.draw(ellipticalButton, canvas)
+    data.buttons = [data.spiralButton, data.irregularButton, data.ellipticalButton]
     #get which galaxy to use
     #get image and use
     #use question and import buttons
     #draw method for button to put in correct location
 def gameSlide2(canvas, data):
-    barButton = buttons.Buttons("bar", data.barButton[0], data.barButton[1])
-    bulgeButton = buttons.Buttons("bulge", data.bulgeButton[0], data.bulgeButton[1])
-    ringButton = buttons.Buttons("ring", data.ringButton[0], data.ringButton[1])
+    barButton = buttons.Buttons(data.barButton[2], data.barButton[0], data.barButton[1])
+    bulgeButton = buttons.Buttons(data.bulgeButton[2], data.bulgeButton[0], data.bulgeButton[1])
+    ringButton = buttons.Buttons(data.ringButton[2], data.ringButton[0], data.ringButton[1])
     buttons.Buttons.draw(barButton, canvas)
     buttons.Buttons.draw(bulgeButton, canvas)
     buttons.Buttons.draw(ringButton, canvas)
+    data.buttons = [data.barButton, data.irregularButton, data.ringButton]
 
 def run(width=300, height=300):
     def redrawAllWrapper(canvas, data):
