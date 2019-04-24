@@ -28,9 +28,8 @@ galaxies = dict()
 def findEndString(body,start):
     charNum = 0
     for char in body[start:]:
-        print("here!")
-        if char == "'":
-            print("FOUND!")
+        if char == '"':
+            #print("FOUND!")
             return charNum
         charNum += 1
         
@@ -39,19 +38,28 @@ for table in parser.find("table", {"class":"wikitable sortable"}):
     table = str(table)
     heading = True
     for body in table.split("<tr>"):
-        if body != string.whitespace: ###if not whitespace, what is this?
-            print(body)
+        #print("row:")
+        #print(body)
+        if body not in string.whitespace: ###if not whitespace, what is this?
+            link = ""
+            title = ""
+            #print("yay")
+            
             linkStart = body.find("href=") + len("href='")
-            print("start=", linkStart)
-            findEndString(body,linkStart)
-            linkEnd = linkStart + findEndString(body,linkStart)
-            link = body[linkStart:linkEnd]
+            #print("start=", linkStart)
+            lastChar = findEndString(body,linkStart)
+            if lastChar is not None:
+                linkEnd = linkStart + lastChar
+                link = body[linkStart:linkEnd]
             
             titleStart = body.find("title=") + len("title=")
-            titleEnd = titleStart + findEndString(body,titleStart)
-            title = body[titleStart:titleEnd]
+            lastChar = findEndString(body,linkStart)
+            if lastChar is not None:
+                titleEnd = titleStart + lastChar
+                title = body[titleStart:titleEnd]
             
-            galaxies[title] = [link]
+            if title != "" and link != "":
+                galaxies[title] = [link]
         
     #     if not heading:
     #         for cell in body.split("<td>"):
