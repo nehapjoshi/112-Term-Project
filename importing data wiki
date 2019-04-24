@@ -1,4 +1,5 @@
 import requests
+import string
 
 url = "https://en.wikipedia.org/wiki/List_of_spiral_galaxies"
 
@@ -7,21 +8,61 @@ website = requests.get(url)
 source = website.text
 
 from bs4 import BeautifulSoup
-#identifies to parse through source info of website
+
 parser = BeautifulSoup(source,'html.parser')
 
 #dictionary of information for galaxies from table
 galaxies = dict()
 
+# def getTitleCell(cell):
+#     for info in cell.split(" "):
+#         if "class=" not in info:
+#             if "href=" in info:
+#                 if ".jpg" not in info or ".png" not in info:
+#                     link = info[6:-1]
+#             if "title=" in info:
+#                 end = info.find('>')
+#                 title = info[7:end + 1] #cutting off last letter, adding 1 doesn't work
+#     return link, title
+
+def findEndString(body,start):
+    charNum = 0
+    for char in body[start:]:
+        print("here!")
+        if char == "'":
+            print("FOUND!")
+            return charNum
+        charNum += 1
+        
 #parsing through text of table to find info in cells
 for table in parser.find("table", {"class":"wikitable sortable"}):
     table = str(table)
     heading = True
     for body in table.split("<tr>"):
-        if not heading:
-            print("row:" + body + "\n")
-        heading = False
+        if body != string.whitespace: ###if not whitespace, what is this?
+            print(body)
+            linkStart = body.find("href=") + len("href='")
+            print("start=", linkStart)
+            findEndString(body,linkStart)
+            linkEnd = linkStart + findEndString(body,linkStart)
+            link = body[linkStart:linkEnd]
+            
+            titleStart = body.find("title=") + len("title=")
+            titleEnd = titleStart + findEndString(body,titleStart)
+            title = body[titleStart:titleEnd]
+            
+            galaxies[title] = [link]
         
+    #     if not heading:
+    #         for cell in body.split("<td>"):
+    #             print(cell)
+    #             if "href" in cell and "title" in cell:
+    #                 link, title = getTitleCell(cell)
+    #             galaxies[title] = [link] 
+    #     heading = False
+    # print(galaxies)
+        
+
         # for column in parser.find_all("td"):
         #     if col == 0:
         #         key = column.text
