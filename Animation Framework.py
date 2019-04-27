@@ -3,6 +3,7 @@
 from tkinter import *
 import buttons
 import os
+import getGalaxies
 
 def init(data):
     data.title = "Galaxy Sorting"
@@ -211,6 +212,10 @@ def gameSlide1(canvas, data):
     buttons.Buttons.draw(irregularButton, canvas)
     buttons.Buttons.draw(ellipticalButton, canvas)
     data.buttons = [data.spiralButton, data.irregularButton, data.ellipticalButton]
+    galaxyName = getGalaxies.getGalaxy((data.slideNum - 5)//2)
+    canvas.create_text(data.width//2, data.margin, text = galaxyName, anchor = "n",
+        font = "Arial " + str(data.height//30) + " bold")
+    
     #get which galaxy to use
     #get image and use
     #use question and import buttons
@@ -223,6 +228,9 @@ def gameSlide2(canvas, data):
     buttons.Buttons.draw(bulgeButton, canvas)
     buttons.Buttons.draw(ringButton, canvas)
     data.buttons = [data.barButton, data.irregularButton, data.ringButton]
+    galaxyName = getGalaxies.getGalaxy((data.slideNum - 5)//2)
+    canvas.create_text(data.width//2, data.margin, text = galaxyName, anchor = "n",
+        font = "Arial " + str(data.height//30) + " bold")
 
 def run(width=300, height=300):
     def redrawAllWrapper(canvas, data):
