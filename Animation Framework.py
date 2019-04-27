@@ -30,9 +30,7 @@ def mousePressed(event, data):
             if (button[0] <= event.x <= button[0] + 
             data.buttonWidth) and (button[1] <= event.y <= 
             button[1] + data.buttonHeight):
-                data.answers += button[2]
-                #print(button[2])
-        
+                data.answers += button[2]        
 
 def keyPressed(event, data):
     if event.keysym == "Right":
@@ -206,9 +204,9 @@ def gameDirections(canvas, data):
         font = "Arial " + str(data.height//30))
 
 def gameSlide1(canvas, data):
-    spiralButton = buttons.Buttons(data.spiralButton[2], data.spiralButton[0], data.spiralButton[1])
-    irregularButton = buttons.Buttons(data.irregularButton[2], data.irregularButton[0], data.irregularButton[1])
-    ellipticalButton = buttons.Buttons(data.ellipticalButton[2], data.ellipticalButton[0], data.ellipticalButton[1])
+    spiralButton = buttons.Buttons(data.spiralButton[0], data.spiralButton[1], data.spiralButton[2])
+    irregularButton = buttons.Buttons(data.irregularButton[0], data.irregularButton[1],data.irregularButton[2])
+    ellipticalButton = buttons.Buttons(data.ellipticalButton[0], data.ellipticalButton[1], data.ellipticalButton[2])
     buttons.Buttons.draw(spiralButton, canvas)
     buttons.Buttons.draw(irregularButton, canvas)
     buttons.Buttons.draw(ellipticalButton, canvas)
@@ -218,9 +216,9 @@ def gameSlide1(canvas, data):
     #use question and import buttons
     #draw method for button to put in correct location
 def gameSlide2(canvas, data):
-    barButton = buttons.Buttons(data.barButton[2], data.barButton[0], data.barButton[1])
-    bulgeButton = buttons.Buttons(data.bulgeButton[2], data.bulgeButton[0], data.bulgeButton[1])
-    ringButton = buttons.Buttons(data.ringButton[2], data.ringButton[0], data.ringButton[1])
+    barButton = buttons.Buttons(data.barButton[0], data.barButton[1], data.barButton[2])
+    bulgeButton = buttons.Buttons(data.bulgeButton[0], data.bulgeButton[1], data.bulgeButton[2])
+    ringButton = buttons.Buttons(data.ringButton[0], data.ringButton[1], data.ringButton[2])
     buttons.Buttons.draw(barButton, canvas)
     buttons.Buttons.draw(bulgeButton, canvas)
     buttons.Buttons.draw(ringButton, canvas)
@@ -247,6 +245,7 @@ def run(width=300, height=300):
         redrawAllWrapper(canvas, data)
         # pause, then call timerFired again
         canvas.after(data.timerDelay, timerFiredWrapper, canvas, data)
+   
     # Set up data and call init
     class Struct(object): pass
     data = Struct()
@@ -269,5 +268,5 @@ def run(width=300, height=300):
     # and launch the app
     root.mainloop()  # blocks until window is closed
     print("bye!")
-
-run(1000, 1000)
+    
+run(1000,1000)
