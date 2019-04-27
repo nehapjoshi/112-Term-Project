@@ -14,16 +14,6 @@ parser = BeautifulSoup(source,'html.parser')
 #dictionary of information for galaxies from table
 galaxies = dict()
 
-# def getTitleCell(cell):
-#     for info in cell.split(" "):
-#         if "class=" not in info:
-#             if "href=" in info:
-#                 if ".jpg" not in info or ".png" not in info:
-#                     link = info[6:-1]
-#             if "title=" in info:
-#                 end = info.find('>')
-#                 title = info[7:end + 1] #cutting off last letter, adding 1 doesn't work
-#     return link, title
 
 def findEndString(body,start):
     charNum = 0
@@ -40,6 +30,7 @@ for table in parser.find("table", {"class":"wikitable sortable"}):
     for body in table.split("<tr>"):
         #print("row:")
         #print(body)
+        
         if body not in string.whitespace: ###if not whitespace, what is this?
             link = ""
             title = ""
@@ -51,40 +42,28 @@ for table in parser.find("table", {"class":"wikitable sortable"}):
             if lastChar is not None:
                 linkEnd = linkStart + lastChar
                 link = body[linkStart:linkEnd]
+                
             
-            titleStart = body.find("title=") + len("title=")
-            lastChar = findEndString(body,linkStart)
+            titleStart = body.find("title=") + len("title='")
+            lastChar = findEndString(body,titleStart)
             if lastChar is not None:
                 titleEnd = titleStart + lastChar
                 title = body[titleStart:titleEnd]
+                #print(titleStart)
+                #print(titleEnd)
+                #print(repr(title))
             
             if title != "" and link != "":
+                #print(title)
+                #print(link)
                 galaxies[title] = [link]
-        
-    #     if not heading:
-    #         for cell in body.split("<td>"):
-    #             print(cell)
-    #             if "href" in cell and "title" in cell:
-    #                 link, title = getTitleCell(cell)
-    #             galaxies[title] = [link] 
-    #     heading = False
-    # print(galaxies)
-        
+removed = dict()
+for galaxy in galaxies:
+    if len(galaxy) > 20:
+        print(galaxy)
+        removed[galaxy] = galaxies[galaxy]
 
-        # for column in parser.find_all("td"):
-        #     if col == 0:
-        #         key = column.text
-        #         for link in parser.find_all("a", href=True):
-        #             address = link['href']
-        #             print(address)
-        #         col +=1
-
-            #     values = []
-            # else:
-            #     column
-
-
-
-# for tableRow in parser.find_all("td"):
-#     for a in parser.find_all("a", href=True):
-#         print("Found the URL:", a['href'])
+for galaxy in removed:
+    del galaxies[galaxy]
+ 
+print(galaxies)
