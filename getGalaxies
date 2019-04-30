@@ -1,5 +1,6 @@
 import SpiralData
 import random
+import resizingImages
 
 gameGalaxies = dict()
 
@@ -8,8 +9,7 @@ choices = []
 for galaxy in SpiralData.galaxies:
     choices += [galaxy]
     
-numChoices = len(choices)
-print(numChoices)
+numChoices = len(choices) - 1
 
 for i in range(6):
     galaxyNum = random.randint(0, numChoices)
@@ -19,7 +19,15 @@ for i in range(6):
 galaxyNames = []
 for galaxy in gameGalaxies:
     galaxyNames.append(galaxy)
+    
+galaxyLinks = []
+for galaxy in gameGalaxies:
+    galaxyLinks.append(gameGalaxies[galaxy])
+    
 
 def getGalaxy(num):
     return galaxyNames[num]
     
+def getLink(num):
+    link = str(galaxyLinks[num])
+    return link[2:-2]
