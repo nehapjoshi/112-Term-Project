@@ -62,6 +62,8 @@ removed = dict()
 for galaxy in galaxies:
     if len(galaxy) > 20:
         removed[galaxy] = galaxies[galaxy]
+    if "5257" in galaxy or "5624" in galaxy or "3223" in galaxy:
+        removed[galaxy] = galaxies[galaxy]
 
 for galaxy in removed:
     del galaxies[galaxy]
