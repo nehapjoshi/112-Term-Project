@@ -10,12 +10,13 @@ def init(data):
     data.title = "Galaxy Sorting"
     data.slideNum = 0
     data.margin = data.height//50
-    data.spiralButton = (2*data.width/3, data.height /4, "spiral")
-    data.irregularButton = (2*data.width/3, data.height /2, "irregular")
-    data.ellipticalButton = (2*data.width/3, 3*data.height /4, "elliptical")
-    data.bulgeButton = (2*data.width/3, data.height /4, "bulge")
-    data.barButton = (2*data.width/3, data.height /2, "bar")
-    data.ringButton = (2*data.width/3, 3*data.height /4, "ring")
+    data.spiralButton = (2*data.width/3, 2*data.height /7, "spiral")
+    data.irregularButton = (2*data.width/3, 3*data.height /7, "irregular")
+    data.ellipticalButton = (2*data.width/3, 4*data.height /7, "elliptical")
+    data.bulgeButton = (2*data.width/3, 2*data.height /7, "bulge")
+    data.barButton = (2*data.width/3, 3*data.height /7, "bar")
+    data.ringButton = (2*data.width/3, 4*data.height /7, "ring")
+    data.noneButton = (2*data.width/3, 5*data.height/7, "none")
     data.buttonHeight = 100
     data.buttonWidth = 200
     data.buttons = []
@@ -23,7 +24,7 @@ def init(data):
     data.clicks = 0
     data.galaxy = ""
     loadGalaxyImages(data) #loads all necessary images
-    data.slide1 = False
+    data.Category = False
 
 def mousePressed(event, data):
     x = event.x
@@ -36,10 +37,10 @@ def mousePressed(event, data):
             button[1] + data.buttonHeight):
                 galaxy = data.galaxy
                 print(galaxy)
-                if data.slide1:
+                if data.Category:
                     data.answers[data.galaxy] = [button[2]]
                     print(button[2])
-                if not data.slide1:
+                if not data.Category:
                     data.answers[data.galaxy].append(button[2])
                     print(button[2])
                 data.slideNum += 1
@@ -66,14 +67,11 @@ def loadGalaxyImages(data):
     data.NGC1427A = PhotoImage(file = NGC1427APath)
     ESO325G004Path = 'image_gifs/ESO 325-G004.gif'
     data.ESO325G004 = PhotoImage(file = ESO325G004Path)
-        
-
     
 #sets up what is going to show up on each slide
 def displaySlide(canvas, data):
     if data.slideNum == 0:
         titleSlide(canvas, data)
-    #decide what each slide displays (story board)
     elif data.slideNum == 1:
         galaxyCategoriesSlide(canvas, data)
     elif data.slideNum == 2:
@@ -83,9 +81,11 @@ def displaySlide(canvas, data):
     elif data.slideNum == 4:
         gameDirections(canvas, data)
     elif 15 > data.slideNum >= 5 and data.slideNum % 2 != 0:
-        gameSlide1(canvas, data)
+        data.Category = True
+        gameCategory(canvas, data)
     elif 15 > data.slideNum >=5 and data.slideNum % 2 == 0:
-        gameSlide2(canvas,data)
+        data.Category = True
+        gameCharacteristic(canvas,data)
     elif data.slideNum == 15:
         endGame(canvas, data)
  
@@ -93,7 +93,6 @@ def displaySlide(canvas, data):
 def titleSlide(canvas, data):
     title = "GALAXY SORTING"
     
-    #line too long:
     details = "Learn what makes a galaxy unique and become an astronomer too!"
     
     directions = "Press the right to advance through each slide."
@@ -107,9 +106,21 @@ def titleSlide(canvas, data):
     
     canvas.create_text(data.width//2, 3*data.height//4, text = directions,
         font = "Arial " + str(data.height//30))
+        
+#widget code from https://www.python-course.eu/tkinter_entry_widgets.php
+#entry widget to get a username
+    """
+    Label(canvas, text="Enter Name").grid(row=0)
+    
+    e1 = Entry(canvas)
+    
+    canvas.create_window(window = e1, 10, 10)
+    
+    canvas.update()
+    window.mainloop()
+    """
 
 #text to be shown on slide teaching about types of galaxies
-##insert images
 def galaxyCategoriesSlide(canvas, data):
     heading = "THE THREE MAIN CATEGORIES OF GALAXIES"
     
@@ -211,7 +222,8 @@ def gameDirections(canvas, data):
     
     canvas.create_text(data.margin, data.height//4, text = step2, anchor = "nw",
         font = "Arial " + str(data.height//30))
-
+    
+#gets galaxy name and link and image
 def galaxyInfo(canvas,data):
     galaxyNum = (data.slideNum - 5)//2
     galaxyName = getGalaxies.getGalaxy(galaxyNum)
@@ -225,38 +237,39 @@ def galaxyInfo(canvas,data):
     fileName = galaxyName.replace(" ", "_")
     path2 = "/images2/" + fileName + "_2.jpg"
     completePath = path + path2
+    #PhotoImage code from https://pythonbasics.org/tkinter-image/
     load = Image.open(completePath)
     render = ImageTk.PhotoImage(load)
     img = Label(canvas, image=render)
     img.image = render
     img.place(x = 2*data.margin, y = data.height//3)
+
     
 
-def gameSlide1(canvas, data):
-    data.slide1 = True
-    spiralButton = buttons.Buttons(data.spiralButton[0], data.spiralButton[1], data.spiralButton[2])
-    irregularButton = buttons.Buttons(data.irregularButton[0], data.irregularButton[1],data.irregularButton[2])
-    ellipticalButton = buttons.Buttons(data.ellipticalButton[0], data.ellipticalButton[1], data.ellipticalButton[2])
-    buttons.Buttons.draw(spiralButton, canvas)
-    buttons.Buttons.draw(irregularButton, canvas)
-    buttons.Buttons.draw(ellipticalButton, canvas)
+def gameCategory(canvas, data):
+    spiralButton = buttons.Category(data.spiralButton[0], data.spiralButton[1], data.spiralButton[2])
+    irregularButton = buttons.Category(data.irregularButton[0], data.irregularButton[1],data.irregularButton[2])
+    ellipticalButton = buttons.Category(data.ellipticalButton[0], data.ellipticalButton[1], data.ellipticalButton[2])
+    buttons.Category.draw(spiralButton, canvas)
+    buttons.Category.draw(irregularButton, canvas)
+    buttons.Category.draw(ellipticalButton, canvas)
     data.buttons = [data.spiralButton, data.irregularButton, data.ellipticalButton]
     galaxyInfo(canvas,data)
     
 
-def gameSlide2(canvas, data):
-    data.slide1 = False
-    barButton = buttons.Buttons(data.barButton[0], data.barButton[1], data.barButton[2])
-    bulgeButton = buttons.Buttons(data.bulgeButton[0], data.bulgeButton[1], data.bulgeButton[2])
-    ringButton = buttons.Buttons(data.ringButton[0], data.ringButton[1], data.ringButton[2])
-    buttons.Buttons.draw(barButton, canvas)
-    buttons.Buttons.draw(bulgeButton, canvas)
-    buttons.Buttons.draw(ringButton, canvas)
-    data.buttons = [data.barButton, data.bulgeButton, data.ringButton]
+def gameCharacteristic(canvas, data):
+    barButton = buttons.Characteristic(data.barButton[0], data.barButton[1], data.barButton[2])
+    bulgeButton = buttons.Characteristic(data.bulgeButton[0], data.bulgeButton[1], data.bulgeButton[2])
+    ringButton = buttons.Characteristic(data.ringButton[0], data.ringButton[1], data.ringButton[2])
+    noneButton = buttons.Characteristic(data.noneButton[0], data.noneButton[1], data.noneButton[2])
+    buttons.Characteristic.draw(barButton, canvas)
+    buttons.Characteristic.draw(bulgeButton, canvas)
+    buttons.Characteristic.draw(ringButton, canvas)
+    buttons.Characteristic.draw(noneButton, canvas)
+    data.buttons = [data.barButton, data.bulgeButton, data.ringButton, data.noneButton]
     galaxyInfo(canvas,data)
     
 def endGame(canvas, data):
-    data.slide1 = False
     heading = "You've finished this learning activity!"
     results = "This is what you chose for each galaxy:"
     num = 0
