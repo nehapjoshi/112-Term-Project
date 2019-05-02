@@ -6,6 +6,8 @@ import os
 import getGalaxies
 from PIL import Image, ImageTk
 
+
+
 def init(data):
     data.title = "Galaxy Sorting"
     data.slideNum = 0
@@ -21,37 +23,47 @@ def init(data):
     data.buttonWidth = 200
     data.buttons = []
     data.answers = dict()
-    data.clicks = 0
+    data.galaxyNum = -1
     data.galaxy = ""
+    data.galaxiesList = getGalaxies.getGalaxy()
+    data.loadedImages = []
+    data.name = ""
     loadGalaxyImages(data) #loads all necessary images
-    data.Category = False
+    
 
 def mousePressed(event, data):
     x = event.x
     y = event.y
     if data.slideNum >= 5:
-        print(data.buttons)
         for button in data.buttons:
             if (button[0] <= event.x <= button[0] + 
             data.buttonWidth) and (button[1] <= event.y <= 
             button[1] + data.buttonHeight):
-                galaxy = data.galaxy
-                print(galaxy)
-                if data.Category:
+                if data.slideNum % 2 != 0:
                     data.answers[data.galaxy] = [button[2]]
                     print(button[2])
-                if not data.Category:
+                    print(data.answers)
+                    data.galaxy = data.galaxiesList[data.galaxyNum]
+                else:
                     data.answers[data.galaxy].append(button[2])
                     print(button[2])
+                    print(data.answers)
+                    data.galaxyNum += 1
+                    data.galaxy = data.galaxiesList[data.galaxyNum]
                 data.slideNum += 1
-                    
+  
 
 def keyPressed(event, data):
     if event.keysym == "Right":
         data.slideNum += 1
+        if 15 > data.slideNum >=5 and data.slideNum % 2 != 0:
+            data.galaxyNum += 1
+            data.galaxy = data.galaxiesList[data.galaxyNum]
     elif event.keysym == "Left":
         data.slideNum -= 1
-    data.clicks = 0
+        if 15 > data.slideNum >=5 and data.slideNum % 2 == 0:
+            data.galaxyNum -= 1
+            data.galaxy = data.galaxiesList[data.galaxyNum]
 
 def timerFired(data):
     pass
@@ -60,6 +72,7 @@ def redrawAll(canvas, data):
     displaySlide(canvas, data)
     
 def loadGalaxyImages(data):
+    #galaxy images from https://www.wikipedia.org/
     path = os.getcwd()
     pinwheelPath = 'image_gifs/pinwheel.gif'
     data.pinwheel = PhotoImage(file = pinwheelPath)
@@ -67,11 +80,27 @@ def loadGalaxyImages(data):
     data.NGC1427A = PhotoImage(file = NGC1427APath)
     ESO325G004Path = 'image_gifs/ESO 325-G004.gif'
     data.ESO325G004 = PhotoImage(file = ESO325G004Path)
+    ringPath = 'image_gifs/ring.gif'
+    data.ring = PhotoImage(file = ringPath)
+    bulgePath = 'image_gifs/bulge.gif'
+    data.bulge = PhotoImage(file = bulgePath)
+    barredPath = 'image_gifs/barred.gif'
+    data.barred = PhotoImage(file = barredPath)
+    
+    path = os.getcwd()
+    for galaxyName in data.galaxiesList:
+        fileName = galaxyName.replace(" ", "_")
+        path2 = "/images2/" + fileName + "_2.jpg"
+        completePath = path + path2
+        #PhotoImage code from https://pythonbasics.org/tkinter-image/
+        loadedImage = Image.open(completePath)
+        data.loadedImages.append(loadedImage)
     
 #sets up what is going to show up on each slide
 def displaySlide(canvas, data):
     if data.slideNum == 0:
         titleSlide(canvas, data)
+        getUsername(data)
     elif data.slideNum == 1:
         galaxyCategoriesSlide(canvas, data)
     elif data.slideNum == 2:
@@ -81,14 +110,35 @@ def displaySlide(canvas, data):
     elif data.slideNum == 4:
         gameDirections(canvas, data)
     elif 15 > data.slideNum >= 5 and data.slideNum % 2 != 0:
-        data.Category = True
         gameCategory(canvas, data)
     elif 15 > data.slideNum >=5 and data.slideNum % 2 == 0:
-        data.Category = True
         gameCharacteristic(canvas,data)
     elif data.slideNum == 15:
         endGame(canvas, data)
- 
+
+#widget info and code from: http://effbot.org/tkinterbook/entry.htm
+def getUsername(data):
+    master = Tk()
+    
+    msg = Label(master, text = "Enter a username")
+    msg.pack()
+    
+    e = Entry(master)
+    e.pack()
+    
+    e.focus_set()
+    
+    def callback():
+        data.name = e.get()
+        print(data.name)
+    
+    b = Button(master, text="Continue", width=10, command=callback, pady=10)
+    b.pack()
+    
+    mainloop()
+    e = Entry(master, width=50, padx=10, pady = 10)
+    e.pack()
+    
 #defines what is shown on title slide       
 def titleSlide(canvas, data):
     title = "GALAXY SORTING"
@@ -107,19 +157,6 @@ def titleSlide(canvas, data):
     canvas.create_text(data.width//2, 3*data.height//4, text = directions,
         font = "Arial " + str(data.height//30))
         
-#widget code from https://www.python-course.eu/tkinter_entry_widgets.php
-#entry widget to get a username
-    """
-    Label(canvas, text="Enter Name").grid(row=0)
-    
-    e1 = Entry(canvas)
-    
-    canvas.create_window(window = e1, 10, 10)
-    
-    canvas.update()
-    window.mainloop()
-    """
-
 #text to be shown on slide teaching about types of galaxies
 def galaxyCategoriesSlide(canvas, data):
     heading = "THE THREE MAIN CATEGORIES OF GALAXIES"
@@ -152,6 +189,7 @@ def galaxyCategoriesSlide(canvas, data):
     
     canvas.create_text(data.width//5, 2*data.height//5, text = ellipticalInfo, 
         anchor = "nw", font = "Arial " + str(data.height//50))
+    
     canvas.create_image(data.width//10, 2*data.height//5, image = data.ESO325G004)
     
     #irregular info and image
@@ -162,6 +200,7 @@ def galaxyCategoriesSlide(canvas, data):
         anchor = "nw", font = "Arial " + str(data.height//50))
     
     canvas.create_image(data.width//10, 3*data.height//5, image = data.NGC1427A)
+
 #text to be shown about special characteristics galaxies might have
 ##insert images
 def specialCharacteristicsSlide(canvas, data):
@@ -176,6 +215,7 @@ def specialCharacteristicsSlide(canvas, data):
     ring = "RING"
     ringInfo = "Some galaxies maight have a ring of matter surrounding them, \n similar to how a planet can have rings."
     
+    #barred info and image
     canvas.create_text(data.width//2, data.margin, text = heading, anchor = "n",
         font = "Arial " + str(data.height//30) + " bold")
     
@@ -185,17 +225,25 @@ def specialCharacteristicsSlide(canvas, data):
     canvas.create_text(data.width//5, 1*data.height//5, text = barInfo,
         anchor = "nw", font = "Arial " + str(data.height//50))
     
+    canvas.create_image(data.width//10, 1*data.height//5, image = data.barred)
+    
+    #bulge info and image
     canvas.create_text(data.width//5, 2*data.height//5, text = bulge, 
         anchor = "sw", font = "Arial " + str(data.height//50) + " bold")
     
     canvas.create_text(data.width//5, 2*data.height//5, text = bulgeInfo, 
         anchor = "nw", font = "Arial " + str(data.height//50))
-    
+        
+    canvas.create_image(data.width//10, 2*data.height//5, image = data.bulge)
+
+    #ring info and image
     canvas.create_text(data.width//5, 3*data.height//5, text = ring, 
         anchor = "sw", font = "Arial " + str(data.height//50) + " bold")
     
     canvas.create_text(data.width//5, 3*data.height//5, text = ringInfo, 
         anchor = "nw", font = "Arial " + str(data.height//50))
+    
+    canvas.create_image(data.width//10, 3*data.height//5, image = data.ring)
 
 #slide showing end of the learing module
 def endLearning(canvas, data):
@@ -226,24 +274,16 @@ def gameDirections(canvas, data):
 #gets galaxy name and link and image
 def galaxyInfo(canvas,data):
     galaxyNum = (data.slideNum - 5)//2
-    galaxyName = getGalaxies.getGalaxy(galaxyNum)
-    data.galaxy = galaxyName
+    galaxyName = data.galaxy
     canvas.create_text(data.width//2, data.margin, text = galaxyName, anchor = "n",
         font = "Arial " + str(data.height//30) + " bold")
     galaxyLink = getGalaxies.getLink(galaxyNum)
     canvas.create_text(data.width//2, data.height//8, text = "For more information, visit https://en.wikipedia.org" + galaxyLink, anchor = "s",
         font = "Arial " + str(data.height//50) + " bold")
-    path = os.getcwd()
-    fileName = galaxyName.replace(" ", "_")
-    path2 = "/images2/" + fileName + "_2.jpg"
-    completePath = path + path2
-    #PhotoImage code from https://pythonbasics.org/tkinter-image/
-    load = Image.open(completePath)
-    render = ImageTk.PhotoImage(load)
-    img = Label(canvas, image=render)
-    img.image = render
-    img.place(x = 2*data.margin, y = data.height//3)
-
+    
+    #inserting image: https://stackoverflow.com/questions/16539460/insert-a-jpg-in-a-canvas-with-tkinter-and-python-3-2 and http://www.cs.cmu.edu/~112/notes/notes-animations-demos.html
+    canvas.image = ImageTk.PhotoImage(data.loadedImages[data.galaxyNum])
+    canvas.create_image(data.width//3, data.height//2, image=canvas.image)
     
 
 def gameCategory(canvas, data):
@@ -276,7 +316,6 @@ def endGame(canvas, data):
     height = data.height//4
     canvas.create_text(data.width//2, data.margin, text = heading, font = "Arial " + str(data.height//30) + " bold")
     canvas.create_text(data.width//2, 3*data.margin, text = results, font = "Arial " + str(data.height//30) + " bold")
-    print(data.answers)
     for galaxy in data.answers:
         margin = 30
         canvas.create_text(3*data.margin, height, text = galaxy, font = "Arial " + str(data.height//50) + " bold", anchor = "w")
@@ -318,8 +357,13 @@ def run(width=300, height=300):
     init(data)
     # create the root and the canvas
     canvas = Canvas(root, width=data.width, height=data.height)
+    #e1 = Entry(root)
+    
     canvas.configure(bd=0, highlightthickness=0)
+    #e1.pack()
     canvas.pack()
+    
+    
     # set up events
     root.bind("<Button-1>", lambda event:
                             mousePressedWrapper(event, canvas, data))
